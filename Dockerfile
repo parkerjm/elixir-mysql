@@ -12,9 +12,10 @@ ENV LC_ALL en_US.UTF-8
 RUN cd /tmp; wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb && \
     sudo dpkg -i erlang-solutions_1.0_all.deb
 
-# Install Elixir
+# Install Elixir and supporting components
 RUN apt-get update && apt-get install -y git elixir
-RUN mix local.hex --force
+RUN mix local.hex --force && \
+    mix local.rebar --force
 
 # Insall MySQL client
 RUN apt-get install -y mysql-client
