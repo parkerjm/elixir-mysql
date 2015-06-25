@@ -14,6 +14,7 @@ RUN cd /tmp; wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all
 
 # Install Elixir
 RUN apt-get update && apt-get install -y git elixir
+RUN mix local.hex --force
 
 # Insall MySQL client
 RUN apt-get install -y mysql-client
