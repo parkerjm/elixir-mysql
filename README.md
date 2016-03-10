@@ -9,13 +9,13 @@ The following additional packages are installed in the container for Elixir supp
 # Usage
 To use in Wercker yaml file
 ```
-box: jszod/elixir-mysql:latest
+box: parkerjm/elixir-mysql:latest
 ```
 
 To run it locally
 ```
-docker pull jszod/elixir-mysql
-  docker run -i -t jszod/elixir
+docker pull parkerjm/elixir-mysql
+  docker run -i -t parkerjm/elixir
 ```
 
 
