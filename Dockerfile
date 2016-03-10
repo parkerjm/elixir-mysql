@@ -20,7 +20,7 @@ RUN set -xe \
   && curl -fSL -o elixir-precompiled.zip $ELIXIR_DOWNLOAD_URL \
   && echo "$ELIXIR_DOWNLOAD_SHA256 elixir-precompiled.zip" | sha256sum -c - \
   && unzip -d /usr/local elixir-precompiled.zip \
-  && rm elixir-precompiled.zip \
+  && rm elixir-precompiled.zip
 
 CMD ["iex"]
 
