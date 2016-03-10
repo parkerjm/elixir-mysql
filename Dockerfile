@@ -15,7 +15,7 @@ RUN set -xe \
     wget \
     debconf-utils
   ' \
-  && apt-get update
+  && apt-get update \
   && apt-get install -y --no-install-recommends $buildDeps \
 
 # Install elixir
