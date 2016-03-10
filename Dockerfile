@@ -1,21 +1,32 @@
-FROM ubuntu:trusty
+FROM erlang:18-slim
 
-RUN apt-get update && apt-get -y upgrade && apt-get -y install wget
+# elixir expects utf8.
+ENV ELIXIR_VERSION=v1.2.3 \
+  LANG=C.UTF-8
 
-# Ensure locale for Elixir
-RUN dpkg-reconfigure locales && \
-  locale-gen en_US.UTF-8 && \
-  /usr/sbin/update-locale LANG=en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
+# update apt package list
+RUN apt-get update
 
-# Install Erlang
-RUN cd /tmp; wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb && \
-    sudo dpkg -i erlang-solutions_1.0_all.deb
+RUN set -xe \
+  && ELIXIR_DOWNLOAD_URL="https://github.com/elixir-lang/elixir/releases/download/${ELIXIR_VERSION#*@}/Precompiled.zip" \
+  && ELIXIR_DOWNLOAD_SHA256="948483f0b14630851b9cee3332fdb3467943ed4881672ac41dc562e77cd3c785" \
+  && buildDeps=' \
+    ca-certificates \
+    curl \
+    unzip \
+    wget \
+  ' \
+  && apt-get install -y --no-install-recommends $buildDeps \
+  && curl -fSL -o elixir-precompiled.zip $ELIXIR_DOWNLOAD_URL \
+  && echo "$ELIXIR_DOWNLOAD_SHA256 elixir-precompiled.zip" | sha256sum -c - \
+  && unzip -d /usr/local elixir-precompiled.zip \
+  && rm elixir-precompiled.zip \
 
-# Install Elixir and supporting components
-RUN apt-get update && apt-get install -y git elixir
-RUN mix local.hex --force && \
-    mix local.rebar --force
+CMD ["iex"]
 
 # Insall MySQL client
-RUN apt-get install -y mysql-client
+RUN apt-get install -y mysql-server
+
+# Cleanup
+RUN apt-get purge -y --auto-remove $buildDeps \
+  && rm -rf /var/lib/apt/lists/*
